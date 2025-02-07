@@ -1,5 +1,5 @@
 // Flutter Sensor Data Logger App
-// ignore_for_file: library_private_types_in_public_api, avoid_print
+// ignore_for_file: library_private_types_in_public_api, avoid_print, prefer_interpolation_to_compose_strings
 
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -33,9 +33,42 @@ class LoggingHome extends StatefulWidget {
 class _LoggingHomeState extends State<LoggingHome> {
   late WebSocketChannel channel;
   bool loggingActive = false;
-  List<List<String>> csvData = [];
+  List<List<String>> csvData = [
+    [
+      "Timestamp",
+      "M_1_G_X",
+      "M_1_G_Y",
+      "M_1_G_Z",
+      "M_1_A_X",
+      "M_1_A_Y",
+      "M_1_A_Z",
+      "M_2_G_X",
+      "M_2_G_Y",
+      "M_2_G_Z",
+      "M_2_A_X",
+      "M_2_A_Y",
+      "M_2_A_Z",
+      "M_3_G_X",
+      "M_3_G_Y",
+      "M_3_G_Z",
+      "M_3_A_X",
+      "M_3_A_Y",
+      "M_3_A_Z",
+      "M_4_G_X",
+      "M_4_G_Y",
+      "M_4_G_Z",
+      "M_4_A_X",
+      "M_4_A_Y",
+      "M_4_A_Z",
+      "F_1",
+      "F_2"
+    ]
+  ];
   String displayedData = "";
   String? csvFilePath;
+  bool stanceSwingEnabled = false; // Tracks switch status
+  String leftStanceSwing = ""; // Tracks current value (L-St or L-Sw)
+  bool isLoggingStarted = false; // Tracks logging state
 
   @override
   void dispose() {
@@ -48,10 +81,14 @@ class _LoggingHomeState extends State<LoggingHome> {
     setState(() {
       loggingActive = true;
     });
+    print('herer');
+    print(channel.toString());
     channel.stream.listen((message) {
+      print('processinh');
       processMessage(message);
     }, onError: (error) {
       showMessage("WebSocket Error: $error");
+      print(error);
     }, onDone: () {
       setState(() {
         loggingActive = false;
@@ -68,33 +105,104 @@ class _LoggingHomeState extends State<LoggingHome> {
     showMessage("Logging Stopped.");
   }
 
+  void resetData() {
+    setState(() {
+      displayedData = "";
+      csvData = [
+        [
+          "Timestamp",
+          "M_1_G_X",
+          "M_1_G_Y",
+          "M_1_G_Z",
+          "M_1_A_X",
+          "M_1_A_Y",
+          "M_1_A_Z",
+          "M_2_G_X",
+          "M_2_G_Y",
+          "M_2_G_Z",
+          "M_2_A_X",
+          "M_2_A_Y",
+          "M_2_A_Z",
+          "M_3_G_X",
+          "M_3_G_Y",
+          "M_3_G_Z",
+          "M_3_A_X",
+          "M_3_A_Y",
+          "M_3_A_Z",
+          "M_4_G_X",
+          "M_4_G_Y",
+          "M_4_G_Z",
+          "M_4_A_X",
+          "M_4_A_Y",
+          "M_4_A_Z",
+          "F_1",
+          "F_2"
+        ]
+      ];
+    });
+    showMessage("Data Reset Successfully.");
+  }
+
 void processMessage(String message) {
   String timestamp = DateTime.now().toString();
   List<String> dataLines = message.split('\n');
 
-  // Extract hardcoded data lengths
-  List<String> mpuData = [
-    dataLines.firstWhere((line) => line.contains("MPU6050 1"), orElse: () => "MPU6050_1 Missing"),
-    dataLines.firstWhere((line) => line.contains("MPU6050 2"), orElse: () => "MPU6050_2 Missing"),
-    dataLines.firstWhere((line) => line.contains("MPU6050 3"), orElse: () => "MPU6050_3 Missing"),
-    dataLines.firstWhere((line) => line.contains("MPU6050 4"), orElse: () => "MPU6050_4 Missing"),
-  ];
+  // Extract MPU and Flex Sensor Data
+  List<String> mpuData = dataLines
+      .where((line) => line.contains("MPU6050"))
+      .expand((line) => line.split(', '))
+      .toList();
 
-  List<String> flexData = [
-    dataLines.firstWhere((line) => line.contains("Bend Sensor 1"), orElse: () => "Flex Sensor 1 Missing"),
-    dataLines.firstWhere((line) => line.contains("Bend Sensor 2"), orElse: () => "Flex Sensor 2 Missing"),
-  ];
+  List<String> flexData = dataLines
+      .where((line) => line.contains("Bend Sensor"))
+      .expand((line) => line.split(', '))
+      .toList();
 
-  print(mpuData);
-  print(flexData);
-  csvData.add([timestamp, mpuData[0],mpuData[1],mpuData[2],mpuData[3], flexData[0],flexData[1]]);
-  displayedData = "$timestamp\n${mpuData[0]}\n${mpuData[1]}\n${mpuData[2]}\n${mpuData[3]}\n${flexData[0]}\n${flexData[1]}\n$displayedData";
-  // for (int i = 0; i < 4; i++) {
-  //   String currentFlex = i < 2 ? flexData[i] : "";
+  Map<String, String> mpuValues = {};
+  for (var line in mpuData) {
+    RegExp regex = RegExp(
+        r'MPU6050 (\d) Gyro X=([-\d.]+) Y=([-\d.]+) Z=([-\d.]+) Accel X=([-\d.]+) Y=([-\d.]+) Z=([-\d.]+)');
+    Match? match = regex.firstMatch(line);
+    if (match != null) {
+      String sensorNum = match.group(1)!;
+      mpuValues['M_${sensorNum}_G_X'] = match.group(2)!;
+      mpuValues['M_${sensorNum}_G_Y'] = match.group(3)!;
+      mpuValues['M_${sensorNum}_G_Z'] = match.group(4)!;
+      mpuValues['M_${sensorNum}_A_X'] = match.group(5)!;
+      mpuValues['M_${sensorNum}_A_Y'] = match.group(6)!;
+      mpuValues['M_${sensorNum}_A_Z'] = match.group(7)!;
+    }
+  }
 
-  //   // csvData.add([timestamp, mpuData[i], currentFlex]);
-  //   displayedData = "$timestamp\n${mpuData[i]}\n$currentFlex\n$displayedData";
-  // }
+  Map<String, String> flexValues = {};
+  for (int i = 0; i < flexData.length; i++) {
+    RegExp regex = RegExp(r'Bend Sensor (\d): (.+?) ohms');
+    Match? match = regex.firstMatch(flexData[i]);
+    if (match != null) {
+      String sensorNum = match.group(1)!;
+      flexValues["F_$sensorNum"] = match.group(2)!;
+    }
+  }
+
+  setState(() {
+    String stanceSwingValue = stanceSwingEnabled ? leftStanceSwing : "";
+
+    csvData.add([
+      timestamp,
+      ...mpuValues.values,
+      ...flexValues.values,
+      if (stanceSwingEnabled) stanceSwingValue,
+    ]);
+
+    String display = "$timestamp\n" +
+        mpuValues.entries.map((e) => "${e.key}: ${e.value}").join('\n') +
+        '\n' +
+        flexValues.entries.map((e) => "${e.key}: ${e.value}").join('\n') +
+        '\n' +
+        (stanceSwingEnabled ? "L_St_Sw: $stanceSwingValue\n" : "");
+
+    displayedData = "$display$displayedData";
+  });
 }
 
 
@@ -134,13 +242,19 @@ void processMessage(String message) {
             const SizedBox(height: 20),
             Expanded(
               child: Container(
+                width: double.infinity,
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.blueAccent),
                 ),
-                child: SingleChildScrollView(
-                  child: Text(displayedData, style: const TextStyle(fontSize: 14)),
-                ),
+                child: displayedData.isNotEmpty
+                    ? SingleChildScrollView(
+                        child: Text(displayedData,
+                            style: const TextStyle(fontSize: 14)),
+                      )
+                    : const SizedBox(
+                        width: double.infinity,
+                      ),
               ),
             ),
             const SizedBox(height: 20),
@@ -164,6 +278,54 @@ void processMessage(String message) {
                 onPressed: viewCsvFile,
                 child: const Text("View CSV File"),
               ),
+            if (!loggingActive)
+              ElevatedButton(
+                onPressed: resetData,
+                child: const Text("Reset"),
+              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text("Stance/Swing"),
+                Switch(
+                  value: stanceSwingEnabled,
+                  onChanged: (value) {
+                    setState(() {
+                      stanceSwingEnabled = value;
+                      if (stanceSwingEnabled &&
+                          !csvData[0].contains("L_St_Sw")) {
+                        csvData[0].add("L_St_Sw");
+                      } else if (csvData[0].contains("L_St_Sw")) {
+                        csvData[0].remove("L_St_Sw");
+                      }
+                    });
+                  },
+                ),
+              ],
+            ),
+            if (stanceSwingEnabled && loggingActive) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        leftStanceSwing = "L-St";
+                      });
+                    },
+                    child: const Text("L-Stance"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        leftStanceSwing = "L-Sw";
+                      });
+                    },
+                    child: const Text("L-Swing"),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),
