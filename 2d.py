@@ -9,7 +9,7 @@ from matplotlib.animation import FuncAnimation
 df = pd.read_csv("labeled_gait_output.csv")
 
 # Use a subset to keep animation fast
-# df = df.iloc[::5].reset_index(drop=True)
+df = df.iloc[::5].reset_index(drop=True)
 
 # ----------------------------------------
 # Segment Lengths (in meters)
@@ -71,16 +71,43 @@ PHASE_COLORS = {
 # ----------------------------------------
 # Setup Plot
 # ----------------------------------------
+# fig = plt.figure(figsize=(10, 6))
+# ax = fig.add_subplot(111, projection='3d')
+# ax.set_xlim(-0.2, 0.5)
+# ax.set_ylim(-0.5, 1.5)
+# ax.set_zlim(0, 1.6)
+# ax.plot([-0.2, 0.5], [0, 0], [0, 0], color='gray', linestyle='--', linewidth=1)
+# ax.set_xlabel('X (lateral)')
+# ax.set_ylabel('Y (forward)')
+# ax.set_zlabel('Z (up)')
+# ax.set_title("3D Gait Stick Figure")
+
+# --- Custom view setting ---
+view_name = ""
+# "side"  # "top", "front", "side"
+
+if view_name == "side":
+    elev, azim = 10, 270
+elif view_name == "top":
+    elev, azim = 90, 0
+elif view_name == "front":
+    elev, azim = 10, 180
+else:
+    elev, azim = 10, -60  # default
+
+# Setup plot
 fig = plt.figure(figsize=(10, 6))
 ax = fig.add_subplot(111, projection='3d')
 ax.set_xlim(-0.2, 0.5)
 ax.set_ylim(-0.5, 1.5)
 ax.set_zlim(0, 1.6)
+ax.view_init(elev=elev, azim=azim)  # <- Set camera angle here
 ax.plot([-0.2, 0.5], [0, 0], [0, 0], color='gray', linestyle='--', linewidth=1)
 ax.set_xlabel('X (lateral)')
 ax.set_ylabel('Y (forward)')
 ax.set_zlabel('Z (up)')
-ax.set_title("3D Gait Stick Figure")
+ax.set_title(f"3D Gait Stick Figure - {view_name.title()} View")
+
 
 # Plot elements
 left_leg_line, = ax.plot([], [], [], 'o-', lw=4, label="Left Leg")
@@ -150,6 +177,6 @@ ani = FuncAnimation(fig, update, frames=len(df), interval=40, blit=False)
 plt.legend()
 plt.tight_layout()
 plt.show()
-ani.save("gait_animation.gif", writer='pillow', fps=25)
+ani.save(f"gait_animation_{view_name}.gif", writer='pillow', fps=25)
 
 # ----------------------------------------
