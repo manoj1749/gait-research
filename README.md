@@ -9,6 +9,49 @@
 - `dataset-combine.ipynb`: Earlier version of dataset combination script
 - `convert_images.py`: Utility script to convert PNG images to JPG format
 
+## Recent Work (Past 6-8 Months)
+
+### 1. Machine Learning Model Development
+- Implemented and compared multiple classification models for gait phase detection:
+  - XGBoost (Best performer with 99.71% accuracy)
+  - AdaBoost
+  - Random Forest
+  - SVM
+  - Naive Bayes
+  - Decision Trees
+  - Gradient Boosting
+  - KNN
+  - Logistic Regression
+- Generated comprehensive model performance metrics and confusion matrices
+- Conducted feature importance analysis using RFECV for both left and right gait
+
+### 2. Gait Analysis Improvements
+- Enhanced gait event detection (Heel Strike and Toe-Off)
+- Calculated detailed gait metrics:
+  - Average stance/swing percentages (Left: 44.46%/55.54%, Right: 42.72%/57.28%)
+  - Stride symmetry analysis (Average index: 2.81%)
+  - Step timing analysis for both legs
+  - Cadence measurement (96.07 steps/min)
+- Developed visualization tools for:
+  - Force sensor data
+  - Ankle and knee angles
+  - Gait phase transitions
+  - Stance phase highlighting
+
+### 3. Data Processing Pipeline
+- Created automated data combination scripts for multiple trials
+- Implemented signal filtering and processing:
+  - Butterworth filters for noise reduction
+  - Angular velocity integration
+  - PCA for joint axis identification
+- Developed standardized data labeling system
+
+### 4. Documentation and Analysis
+- Generated comprehensive visualization suite
+- Created detailed performance metrics reports
+- Documented data processing methodologies
+- Established standardized testing protocols
+
 ## Data Files
 - `labeled_gait_data.csv`: Raw data with manual labels for gait events
 - `labeled_gait_output.csv`: Processed data with automated gait event detection
