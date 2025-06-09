@@ -1,0 +1,13 @@
+
+🔍 Training: XGBoost
+
+📊 Results for XGBoost
+✅ Accuracy     : 0.9971
+✅ Macro F1     : 0.8688
+✅ Weighted F1  : 0.9972
+
+🔹 Per-Class F1 Scores:
+Heel Strike    : 0.0000
+Stance         : 0.0000
+Swing          : 0.0000
+Toe-Off        : 0.0000

@@ -1,0 +1,34 @@
+===== Gait Summary =====
+Number of Left Cycles: 14
+Number of Right Cycles: 14
+Cadence (steps/min): 96.07
+Number of Left Heel Strikes: 16
+Number of Right Heel Strikes: 16
+Number of Left Toe Offs: 16
+Number of Right Toe Offs: 16
+Left Avg Stance %: 44.46
+Left Avg Swing %: 55.54
+Right Avg Stance %: 42.72
+Right Avg Swing %: 57.28
+Left Stance Variability: 3.21
+Left Swing Variability: 3.21
+Right Stance Variability: 2.47
+Right Swing Variability: 2.47
+Avg Stride Symmetry Index %: 2.81
+
+===== Step Timing and Symmetry Table =====
+ Cycle Index  Left Step Time (s)  Right Step Time (s)  Stride Symmetry Index (%)
+           2               1.308                1.208                   7.949126
+           3               1.252                1.356                   7.975460
+           4               1.344                1.276                   5.190840
+           5               1.324                1.332                   0.602410
+           6               1.336                1.284                   3.969466
+           7               1.176                1.236                   4.975124
+           8               1.232                1.240                   0.647249
+           9               1.272                1.260                   0.947867
+          10               1.256                1.264                   0.634921
+          11               1.252                1.252                   0.000000
+          12               1.280                1.264                   1.257862
+          13               1.276                1.292                   1.246106
+          14               1.312                1.304                   0.611621
+          15               1.388                1.436                   3.399433

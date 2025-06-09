@@ -1,0 +1,13 @@
+
+🔍 Training: Naive Bayes
+
+📊 Results for Naive Bayes
+✅ Accuracy     : 0.9037
+✅ Macro F1     : 0.5948
+✅ Weighted F1  : 0.9201
+
+🔹 Per-Class F1 Scores:
+Heel Strike    : 0.0000
+Stance         : 0.0000
+Swing          : 0.0000
+Toe-Off        : 0.0000
