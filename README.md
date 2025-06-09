@@ -36,8 +36,7 @@
 - `Dataset/`: Original raw datasets
 - `data-pre-processing/`: Scripts for cleaning and preprocessing raw data
 - `Base-Research/`: Background research and literature
-- `tf_env/`: Python virtual environment
-- `profiling_env/`: Environment for performance profiling
+- `tf_env/` and `profiling_env/`: Python virtual environment
 
 ## Environment
 - `requirements.txt`: Lists all Python package dependencies
