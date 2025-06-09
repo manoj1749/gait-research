@@ -28,7 +28,7 @@
   - All visualizations available in both PNG and JPG formats
 - `labelled/`: Contains individual labeled datasets from different trials
 - `combined_dataset_specimen1/`: Raw and processed data specific to specimen 1
-- `animation outputs/`: Generated animations of gait patterns
+- `animation outputs/`: Generated animations of gait data
 - `analysis/`: Additional analysis scripts and results
 - `visualise/`: Visualization tools and generated plots
 - `phases/`: Scripts for gait phase detection
