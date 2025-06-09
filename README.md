@@ -7,6 +7,7 @@
 - `classify.ipynb`: Classification of gait phases using machine learning
 - `gait_combine_dataset-final.ipynb`: Combines and processes data from multiple trials, includes filtering and angle calculations
 - `dataset-combine.ipynb`: Earlier version of dataset combination script
+- `convert_images.py`: Utility script to convert PNG images to JPG format
 
 ## Data Files
 - `labeled_gait_data.csv`: Raw data with manual labels for gait events
@@ -14,6 +15,17 @@
 - `combined_dataset.csv`: Combined data from multiple trials
 
 ## Folders
+- `OUTPUTs/`: Contains analysis results and visualizations
+  - Model Performance:
+    - Confusion matrices for multiple classifiers (XGBoost, AdaBoost, SVM, etc.)
+    - Model metrics comparison plots
+    - Training outputs and metrics in text format
+  - Gait Analysis:
+    - Force sensor and ankle angle visualizations
+    - Gait phase labeling plots
+    - Left vs Right knee angle comparisons
+    - RFECV feature selection plots
+  - All visualizations available in both PNG and JPG formats
 - `labelled/`: Contains individual labeled datasets from different trials
 - `combined_dataset_specimen1/`: Raw and processed data specific to specimen 1
 - `animation outputs/`: Generated animations of gait patterns
